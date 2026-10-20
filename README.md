@@ -76,7 +76,7 @@ The backend and database will require additional tools once their implementation
 Clone the repository:
 
 ```bash
-git clone <YOUR_REPOSITORY_URL>
+git clone <https://github.com/AdamStempin/Study_Hub>
 ```
 
 Navigate to the project directory:
