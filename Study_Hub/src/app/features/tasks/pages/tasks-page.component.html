@@ -1,0 +1,92 @@
+<main class="tasks-page">
+  <header class="tasks-header">
+    <a class="back-link" routerLink="/">← Dashboard</a>
+    <span class="brand">Study<span>Hub</span></span>
+  </header>
+
+  @if (!isDetailPage()) {
+    <section class="tasks-content">
+      <div class="page-heading">
+        <div>
+          <p class="eyebrow">YOUR STUDY PLAN</p>
+          <h1>Tasks</h1>
+          <p class="page-description">Everything you need to study, arranged by deadline.</p>
+        </div>
+        <span class="task-count">{{ tasks.upcomingTasks().length }} {{ tasks.upcomingTasks().length === 1 ? 'task' : 'tasks' }}</span>
+      </div>
+
+      <div class="task-list">
+        @for (task of tasks.upcomingTasks(); track task.id) {
+          <a class="task-card" [class.is-completed]="task.completedAt !== null" [routerLink]="['/tasks', task.id]">
+            <span class="task-status">{{ task.completedAt !== null ? '✓' : '•' }}</span>
+            <span class="task-card-copy">
+              <strong>{{ task.subject }}</strong>
+              <span>{{ task.description }}</span>
+            </span>
+            <span class="task-deadline">
+              <small>{{ task.completedAt !== null ? 'Completed' : 'DEADLINE' }}</small>
+              <strong>{{ formatDeadline(task.completedAt ?? task.dueAt) }}</strong>
+            </span>
+            <span class="task-open-icon" aria-hidden="true">›</span>
+          </a>
+        } @empty {
+          <div class="empty-state">
+            <span>✓</span>
+            <h2>No tasks yet</h2>
+            <p>Add tasks from your dashboard to keep your study plan organized.</p>
+            <a class="button-link" routerLink="/">Go to dashboard</a>
+          </div>
+        }
+      </div>
+    </section>
+  } @else if (selectedTask(); as task) {
+    <section class="task-detail">
+      <a class="back-link detail-back" routerLink="/tasks">← All tasks</a>
+      <div class="detail-heading">
+        <div>
+          <p class="eyebrow">TASK DETAILS</p>
+          <h1>{{ task.subject }}</h1>
+          <p class="page-description">{{ task.completedAt !== null ? 'Completed' : 'Due' }} {{ formatDeadline(task.completedAt ?? task.dueAt) }}</p>
+        </div>
+        <span class="status-pill" [class.complete-pill]="task.completedAt !== null">
+          {{ task.completedAt !== null ? 'Completed' : 'In progress' }}
+        </span>
+      </div>
+
+      <form class="detail-card" (ngSubmit)="saveTask()">
+        <label>
+          Subject
+          <input name="subject" type="text" maxlength="80" [(ngModel)]="taskForm.subject" required />
+        </label>
+        <label>
+          What do you need to study?
+          <textarea name="description" rows="5" maxlength="240" [(ngModel)]="taskForm.description" required></textarea>
+        </label>
+        <label>
+          Deadline
+          <input name="dueDateTime" type="datetime-local" [(ngModel)]="taskForm.dueDateTime" required />
+        </label>
+        @if (formError) {
+          <p class="form-message error-message" role="alert">{{ formError }}</p>
+        }
+        @if (savedNotice) {
+          <p class="form-message success-message" role="status">{{ savedNotice }}</p>
+        }
+        <div class="detail-actions">
+          <button class="delete-button" type="button" (click)="deleteTask()">Delete task</button>
+          <button class="complete-button" type="button" (click)="toggleComplete()">
+            {{ task.completedAt !== null ? 'Mark as incomplete' : 'Mark as complete' }}
+          </button>
+          <button class="save-button" type="submit">Save changes</button>
+        </div>
+      </form>
+    </section>
+  } @else {
+    <section class="empty-state missing-task">
+      <span>?</span>
+      <h2>Task not found</h2>
+      <p>This task may have been deleted or the page refreshed.</p>
+      <a class="button-link" routerLink="/tasks">Back to tasks</a>
+    </section>
+  }
+</main>

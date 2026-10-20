@@ -2,6 +2,49 @@
 
 This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.2.26.
 
+## Project structure
+
+Application code lives in `src/app` and is organized by responsibility:
+
+```text
+src/app/
+├── core/           # App-wide services, models, guards and interceptors
+├── shared/         # UI reused by multiple features
+├── layout/         # Shared app chrome, such as the sidebar and topbar
+├── pages/          # App-wide pages, including the unknown-path page
+├── features/       # Feature-specific pages and UI
+│   ├── dashboard/
+│   │   └── pages/
+│   ├── subjects/
+│   ├── tasks/
+│   ├── calendar/
+│   ├── pomodoro/
+│   ├── notes/
+│   ├── statistics/
+│   ├── profile/
+│   └── settings/
+└── app.routes.ts   # Maps URLs to pages
+```
+
+Put feature-only code inside its feature folder. Use `shared/components` only
+for UI reused by multiple features, and keep app-wide infrastructure in `core`.
+
+## Timer
+
+The dashboard timer starts with a 25-minute focus interval, a 5-minute short
+break, and a 15-minute long break after four completed focus intervals. Its
+durations and cycle length can be changed in Timer settings. Timer state and
+completed focus sessions stay in memory only and reset when the page is
+refreshed; only completed focus intervals contribute to the daily, weekly, and
+monthly study totals.
+Browser notifications and a completion sound can be enabled in Timer settings.
+Subject and task labels can be entered directly in the timer.
+
+Study tasks are also held in memory only. Add a subject, study description, and
+deadline from the dashboard; tasks can be opened from the dashboard or Tasks
+page to view, edit, complete, or delete them. Tasks and dashboard summaries
+reset when the page is refreshed.
+
 ## Development server
 
 To start a local development server, run:
