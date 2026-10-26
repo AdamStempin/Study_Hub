@@ -1,166 +1,141 @@
-# StudyHub 🎓
+# StudyHub
 
-**Your studies. Your goals. Your progress.**
+**Plan your study. Find your focus. See your progress.**
 
-StudyHub is a modern web application designed to help students organize their academic life, manage school responsibilities, and improve their productivity. It combines task management, subject organization, calendar planning, note-taking, and study time tracking in one convenient platform.
+StudyHub is a responsive student study planner built with Angular. It brings
+upcoming tasks, focused study sessions, and useful progress summaries into one
+dark-themed workspace.
 
-## ✨ Features
+## What you can do
 
-- **Dashboard** – Get an overview of your subjects, upcoming deadlines, daily tasks, and study progress.
-- **Subject Management** – Create and organize subjects, teachers, and related study materials.
-- **Task Management** – Create assignments, set priorities and deadlines, and track completion status.
-- **Academic Calendar** – Plan exams, tests, projects, and other important events.
-- **Pomodoro Timer** – Improve concentration with focused study sessions and scheduled breaks.
-- **Notes** – Create, organize, and manage notes for individual subjects.
-- **Statistics** – Track study time, completed assignments, and productivity over time.
-- **User Accounts** – Manage personal information and keep academic data associated with your account.
-- **Dark and Light Mode** – Customize the appearance of the application.
-- **Responsive Design** – Access the application on desktop computers, tablets, and mobile devices.
+### Dashboard
 
-## 🛠️ Technologies
+- See active subjects, tasks due today, upcoming deadlines, and tasks completed
+  this week.
+- Review upcoming tasks and mark them complete or reopen them.
+- Add study tasks with a subject, description, and deadline.
+- Check your study time for each day of the current week.
+- Start and control a compact Pomodoro timer without leaving the dashboard.
 
-The planned technology stack includes:
+### Tasks
 
-### Frontend
-- Angular
-- TypeScript
-- HTML5
-- CSS3
-- Angular Signals
-- Angular Router
-- Reactive Forms
+- Browse tasks ordered by completion status and deadline.
+- Open a task to edit its subject, description, or deadline.
+- Mark a task complete, reopen it, or delete it.
+- See task deadlines in a readable date and time format.
 
-### Backend
-- ASP.NET Core Web API
-- C#
+### Focus timer
 
-### Database
-- PostgreSQL or SQLite
-- Entity Framework Core
+Open **Timer** from the shared sidebar or visit `/timer`. The dedicated timer
+workspace includes:
 
-*The final technology stack may change during development.*
+- A focus and break timer with start, pause, continue, reset, and skip controls.
+- Editable subject and task labels for the current session.
+- A visual progress indicator toward the next long break.
+- Custom focus, short-break, and long-break durations, plus the number of focus
+  intervals before a long break.
+- Optional completion sounds and browser notifications.
+- Daily, weekly, and monthly completed focus-time totals.
+- A chart of study time by weekday.
+- Recent completed sessions and a breakdown of focus time by subject.
 
-## 🚀 Project Status
+The default cycle is **25 minutes of focus**, a **5-minute short break**, and a
+**15-minute long break after four completed focus intervals**. Focus durations
+can be set from 1–180 minutes, short breaks from 1–60 minutes, long breaks from
+1–120 minutes, and long breaks can follow 2–12 completed focus intervals.
 
-**Status:** In Development
+Only completed focus intervals count toward study statistics. Sessions without
+a subject are grouped under **Unassigned subject**.
 
-StudyHub is being developed as a secondary school research project (SOČ). The goal is to build a functional, user-friendly application that demonstrates modern web development practices and solves a practical problem faced by students.
+## Pages and navigation
 
-Features will be implemented progressively throughout development.
+| URL | Page |
+| --- | --- |
+| `/` | Dashboard |
+| `/tasks` | Task list |
+| `/tasks/:id` | Task details and editing |
+| `/timer` | Full Pomodoro workspace |
 
-## 🎯 Project Goals
+The sidebar is shared across the dashboard and timer pages, with matching
+desktop and mobile layouts. Subjects, Calendar, and Settings are currently
+navigation placeholders rather than separate implemented pages.
 
-The main objectives of StudyHub are to:
+## Data and privacy
 
-- Help students organize their academic responsibilities.
-- Improve time management and study planning.
-- Reduce the risk of missing important deadlines.
-- Encourage consistent study habits.
-- Provide useful insights into learning progress.
-- Demonstrate full-stack web application development.
+Tasks, timer settings, and completed focus sessions are currently held in
+browser memory. They are **not saved between page reloads**; refreshing the
+application clears them. Browser notifications require the browser's
+permission, and completion sound requires browser audio support.
 
-## ⚙️ Getting Started
+## Technology
 
-### Prerequisites
+- Angular 21 and TypeScript
+- Angular Router and standalone components
+- Angular Signals for timer, task, and derived study data
+- HTML and responsive CSS
+- Vitest for unit tests
 
-Before running the project, make sure you have installed:
+## Run locally
 
-- [Node.js](https://nodejs.org/)
-- npm
-- [Angular CLI](https://angular.dev/tools/cli)
-
-The backend and database will require additional tools once their implementation is complete.
-
-### Installation
-
-Clone the repository:
-
-```bash
-git clone <https://github.com/AdamStempin/Study_Hub>
-```
-
-Navigate to the project directory:
+The Angular application is in the `Study_Hub` directory.
 
 ```bash
-cd StudyHub
-```
-
-Install dependencies:
-
-```bash
+cd Study_Hub
 npm install
+npm start
 ```
 
-Start the Angular development server:
+Then open [http://localhost:4200](http://localhost:4200).
+
+### Useful commands
+
+Run a production build:
 
 ```bash
-ng serve
+npm run build
 ```
 
-Open your browser and navigate to:
+Run unit tests once:
 
-`http://localhost:4200/`
+```bash
+npm test -- --watch=false
+```
 
-**Note:** These instructions apply to the Angular frontend. Additional setup steps may be required when the backend and database are integrated.
+Start the Angular CLI directly:
 
-## 📁 Project Structure
+```bash
+npm run ng -- serve
+```
 
-The planned Angular project structure is organized by functionality:
+## Project layout
 
 ```text
-src/
-└── app/
-    ├── core/
-    │   ├── guards/
-    │   ├── interceptors/
-    │   ├── services/
-    │   └── models/
-    ├── shared/
-    │   └── components/
-    ├── layout/
-    │   ├── sidebar/
-    │   └── topbar/
-    ├── features/
-    │   ├── dashboard/
-    │   ├── subjects/
-    │   ├── tasks/
-    │   ├── calendar/
-    │   ├── pomodoro/
-    │   ├── notes/
-    │   ├── statistics/
-    │   ├── profile/
-    │   └── settings/
-    └── app.routes.ts
+Study_Hub/
+├── src/
+│   ├── app/
+│   │   ├── app.routes.ts
+│   │   ├── layout/
+│   │   │   └── sidebar/             # Shared navigation
+│   │   ├── features/
+│   │   │   ├── dashboard/pages/
+│   │   │   ├── tasks/
+│   │   │   │   ├── models/
+│   │   │   │   ├── pages/
+│   │   │   │   └── services/
+│   │   │   └── pomodoro/
+│   │   │       ├── components/
+│   │   │       ├── models/
+│   │   │       ├── pages/
+│   │   │       └── services/
+│   │   └── pages/not-found/
+│   └── styles.css
+├── angular.json
+└── package.json
 ```
 
-This structure is a proposed architecture and may evolve during development.
+## Current scope
 
-## 🔐 Security
-
-Security is an important part of the project. The planned implementation includes secure authentication, password hashing, server-side validation, and authorization checks to protect users' personal data.
-
-Sensitive credentials and environment configuration must never be committed to the repository.
-
-## 🔮 Future Improvements
-
-Potential future enhancements include:
-
-- Browser notifications and deadline reminders.
-- Advanced productivity analytics.
-- Exporting statistics and study plans.
-- Recurring tasks.
-- Calendar integrations.
-- Progressive Web App support.
-- Offline access to selected features.
-
-## 🎓 Educational Purpose
-
-StudyHub is being developed as part of a secondary school research project (SOČ). It provides practical experience with Angular, TypeScript, REST APIs, database design, authentication, responsive interfaces, and software testing.
-
-## 📄 License
-
-No open-source license has been selected yet.
-
----
-
-**StudyHub – Organize your studies. Stay focused. Achieve your goals.**
+StudyHub is under active development. The current implemented flows are the
+dashboard, task management, and Pomodoro study tracking described above.
+Authentication, durable data storage, and standalone Subjects and Calendar
+pages are not currently implemented.

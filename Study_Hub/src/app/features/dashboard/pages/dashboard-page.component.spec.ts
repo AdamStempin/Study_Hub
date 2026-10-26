@@ -28,6 +28,10 @@ describe('DashboardPageComponent', () => {
     expect(compiled.querySelector('#pomodoro input[placeholder="e.g. Mathematics"]')).toBeTruthy();
     expect(compiled.querySelector('#pomodoro button[aria-label="Start timer"]')).toBeTruthy();
     expect(compiled.querySelector('#pomodoro button[aria-label="Open timer settings"]')).toBeTruthy();
+    expect(compiled.querySelector('.nav-link[aria-label="Timer"]')?.getAttribute('href')).toBe('/timer');
+    expect(compiled.querySelector('#pomodoro [role="progressbar"][aria-label="Focus intervals completed toward long break"]'))
+      .toBeTruthy();
+    expect(compiled.querySelectorAll('#pomodoro .cycle-step')).toHaveLength(4);
   });
 
   it('should flip to the timer settings with all available settings', async () => {

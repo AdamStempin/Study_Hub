@@ -123,8 +123,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 18px;
-  margin-top: -1px;
+  gap: clamp(10px, 1.2vw, 16px);
+  margin-top: 4px;
 }
 
 .pomodoro-panel .round-control,
@@ -141,25 +141,52 @@
 }
 
 .pomodoro-panel .round-control {
-  width: 30px;
-  height: 30px;
-  font-size: 13px;
+  width: 36px;
+  height: 36px;
 }
 
 .pomodoro-panel .play-button {
-  width: 43px;
-  height: 43px;
+  width: 46px;
+  height: 46px;
   border-color: #5598ff;
   background: linear-gradient(145deg, #4d98ff, #3476ed);
   box-shadow: 0 5px 20px rgb(52 119 239 / 33%);
   color: white;
-  font-size: 14px;
-  padding-left: 2px;
+}
+
+.pomodoro-panel .round-control svg,
+.pomodoro-panel .play-button svg {
+  width: 17px;
+  height: 17px;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.8;
+}
+
+.pomodoro-panel .play-button svg {
+  width: 19px;
+  height: 19px;
+  fill: currentColor;
+  stroke: none;
 }
 
 .pomodoro-panel .round-control:hover,
 .pomodoro-panel .play-button:hover {
   transform: scale(1.07);
+}
+
+.pomodoro-panel .round-control:focus-visible,
+.pomodoro-panel .play-button:focus-visible,
+.pomodoro-panel .timer-settings-toggle:focus-visible {
+  outline: 2px solid #a5ccff;
+  outline-offset: 3px;
+}
+
+.pomodoro-panel .round-control:active,
+.pomodoro-panel .play-button:active {
+  transform: scale(0.96);
 }
 
 .pomodoro-panel .session-caption {
@@ -170,6 +197,26 @@
   margin-top: 12px;
   color: #a1b0c5;
   font-size: 10px;
+}
+
+.pomodoro-panel .cycle-progress {
+  display: flex;
+  width: min(100%, 122px);
+  gap: 5px;
+  margin: 8px auto 0;
+}
+
+.pomodoro-panel .cycle-step {
+  height: 4px;
+  flex: 1 1 0;
+  border-radius: 99px;
+  background: #263850;
+  transition: background 180ms ease, box-shadow 180ms ease;
+}
+
+.pomodoro-panel .cycle-step.completed {
+  background: linear-gradient(90deg, #22c4de, #3988ff);
+  box-shadow: 0 0 8px rgb(57 136 255 / 35%);
 }
 
 .pomodoro-panel .session-divider {
@@ -269,17 +316,26 @@
   }
 
   .pomodoro-panel .timer-controls {
-    gap: 14px;
+    gap: 12px;
+  }
+
+  .pomodoro-panel .round-control {
+    width: 32px;
+    height: 32px;
   }
 
   .pomodoro-panel .play-button {
-    width: 38px;
-    height: 38px;
+    width: 40px;
+    height: 40px;
   }
 
   .pomodoro-panel .session-caption {
     margin-top: 7px;
     font-size: 9px;
+  }
+
+  .pomodoro-panel .cycle-progress {
+    margin-top: 6px;
   }
 
   .pomodoro-panel .timer-associations {
@@ -516,8 +572,9 @@
 
 @media (min-width: 1200px) and (min-height: 650px) {
   .pomodoro-panel .timer-wrap {
+    height: clamp(177px, calc(22vh + 12px), 242px);
     min-height: 0;
-    flex: 1 1 100px;
+    flex: 0 0 auto;
   }
 
   .pomodoro-panel .timer-ring {

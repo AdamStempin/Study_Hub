@@ -1,0 +1,269 @@
+<div class="timer-app">
+  <app-sidebar />
+
+  <main class="timer-main">
+    <header class="timer-topbar">
+      <div class="topbar-title">Study space</div>
+      <a class="back-dashboard" routerLink="/">← Back to dashboard</a>
+    </header>
+
+    <div class="timer-content">
+      <section class="timer-intro">
+        <div>
+          <p class="timer-eyebrow">POMODORO WORKSPACE</p>
+          <h1>Make time for focus.</h1>
+          <p>One task, one interval. Take a proper break when the timer says so.</p>
+        </div>
+      </section>
+
+      <section class="timer-workspace" aria-label="Pomodoro timer workspace">
+        <article class="focus-card">
+          <div class="focus-card-heading">
+            <div>
+              <span class="status-label" [class.is-running]="timer.state().status === 'running'">
+                <span class="status-dot"></span>
+                {{ timer.state().status === 'running' ? 'SESSION IN PROGRESS' : timer.state().status === 'paused' ? 'SESSION PAUSED' : 'READY WHEN YOU ARE' }}
+              </span>
+              <h2>{{ phaseLabel }}</h2>
+            </div>
+          </div>
+
+          <div class="focus-timer-layout">
+            <div class="focus-clock">
+              <div
+                class="focus-ring"
+                [style.--timer-progress]="timerProgress() + '%'"
+                role="progressbar"
+                [attr.aria-valuenow]="timer.remainingSeconds()"
+                [attr.aria-valuemax]="timer.state().intervalDurationSeconds"
+                [attr.aria-label]="phaseLabel + ' remaining'"
+              >
+                <div class="focus-ring-inner">
+                  <span class="clock-phase">{{ phaseLabel }}</span>
+                  <strong>{{ formattedTime() }}</strong>
+                  <span class="clock-subtitle">{{ timer.state().status === 'running' ? 'Time to stay present' : timer.state().status === 'paused' ? 'Pick up where you left off' : 'A little progress adds up' }}</span>
+                </div>
+              </div>
+
+              <div class="focus-controls" aria-label="Timer controls">
+                <button class="secondary-control" type="button" aria-label="Reset timer" title="Reset timer" (click)="timer.reset()">
+                  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12a9 9 0 1 0 2.64-6.36L3 8"/><path d="M3 3v5h5"/></svg>
+                </button>
+                <button
+                  class="primary-control"
+                  type="button"
+                  [attr.aria-label]="timer.state().status === 'running' ? 'Pause timer' : timer.state().status === 'paused' ? 'Continue timer' : 'Start timer'"
+                  (click)="timer.state().status === 'running' ? timer.pause() : timer.start()"
+                >
+                  @if (timer.state().status === 'running') {
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 5h3v14H7zM14 5h3v14h-3z"/></svg>
+                    <span>Pause session</span>
+                  } @else {
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m8 5 12 7-12 7z"/></svg>
+                    <span>{{ timer.state().status === 'paused' ? 'Continue session' : 'Start focusing' }}</span>
+                  }
+                </button>
+                <button class="secondary-control" type="button" aria-label="Skip interval" title="Skip interval" (click)="timer.skip()">
+                  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 5 9 7-9 7zM19 5v14"/></svg>
+                </button>
+              </div>
+            </div>
+
+            <div class="focus-details">
+              <div class="focus-detail-heading">
+                <div><span class="detail-kicker">YOUR SESSION</span><h3>What are you working on?</h3></div>
+                <span class="focus-sparkle" aria-hidden="true">✦</span>
+              </div>
+              <p class="detail-description">Set an intention to make it easier to stay on track.</p>
+              <div class="association-fields">
+                <label>
+                  Subject
+                  <input
+                    type="text"
+                    maxlength="80"
+                    placeholder="e.g. Mathematics"
+                    [ngModel]="timer.state().subject"
+                    (ngModelChange)="timer.setSubject($event)"
+                  />
+                </label>
+                <label>
+                  Task
+                  <input
+                    type="text"
+                    maxlength="120"
+                    placeholder="e.g. Review chapter 4"
+                    [ngModel]="timer.state().task"
+                    (ngModelChange)="timer.setTask($event)"
+                  />
+                </label>
+              </div>
+              <div class="cycle-block">
+                <div class="cycle-label"><span>Progress to a long break</span><strong>{{ completedCycleIntervals() }} / {{ focusCycleSteps().length }}</strong></div>
+                <div
+                  class="cycle-progress"
+                  role="progressbar"
+                  aria-label="Focus intervals completed toward long break"
+                  [attr.aria-valuenow]="completedCycleIntervals()"
+                  [attr.aria-valuemax]="focusCycleSteps().length"
+                >
+                  @for (step of focusCycleSteps(); track step) {
+                    <span class="cycle-step" [class.completed]="step < completedCycleIntervals()"></span>
+                  }
+                </div>
+              </div>
+            </div>
+          </div>
+
+          @if (timer.notice()) {
+            <p class="timer-notice" role="status" aria-live="polite">{{ timer.notice() }}</p>
+          }
+        </article>
+
+        <aside class="timer-settings-card">
+          <div class="side-card-heading">
+            <span class="settings-icon">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="m19.4 15 .1.1 1.1.9-1.5 2.6-1.4-.5a7.8 7.8 0 0 1-1.7 1l-.3 1.5h-3l-.3-1.5a7.8 7.8 0 0 1-1.7-1l-1.4.5-1.5-2.6 1.1-.9a7 7 0 0 1 0-2L7.8 12l1.5-2.6 1.4.5a7.8 7.8 0 0 1 1.7-1l.3-1.5h3l.3 1.5a7.8 7.8 0 0 1 1.7 1l1.4-.5 1.5 2.6-1.1.9a7 7 0 0 1-.1 2Z"/></svg>
+            </span>
+            <div>
+              <span class="settings-kicker">PERSONALIZE YOUR CYCLE</span>
+              <h2>Timer settings</h2>
+              <p>Build a rhythm that works for you.</p>
+            </div>
+          </div>
+
+          <form id="settings" class="settings-form" (ngSubmit)="saveSettings()">
+            <label>
+              Focus interval
+              <span class="input-with-unit"><input type="number" name="workMinutes" min="1" max="180" required [(ngModel)]="settingsForm.workMinutes" /><small>min</small></span>
+            </label>
+            <div class="break-settings">
+              <label>
+                Short break
+                <span class="input-with-unit"><input type="number" name="shortBreakMinutes" min="1" max="60" required [(ngModel)]="settingsForm.shortBreakMinutes" /><small>min</small></span>
+              </label>
+              <label>
+                Long break
+                <span class="input-with-unit"><input type="number" name="longBreakMinutes" min="1" max="120" required [(ngModel)]="settingsForm.longBreakMinutes" /><small>min</small></span>
+              </label>
+            </div>
+            <label>
+              Long break after
+              <span class="input-with-unit"><input type="number" name="intervalsBeforeLongBreak" min="2" max="12" required [(ngModel)]="settingsForm.intervalsBeforeLongBreak" /><small>sessions</small></span>
+            </label>
+
+            <div class="setting-toggle">
+              <span><strong>Completion sound</strong><small>A gentle tone when an interval ends</small></span>
+              <input
+                type="checkbox"
+                aria-label="Completion sound"
+                [ngModel]="timer.state().settings.soundEnabled"
+                (ngModelChange)="timer.setSoundEnabled($event)"
+                name="soundEnabled"
+              />
+            </div>
+            <div class="notification-setting">
+              <span><strong>Browser notifications</strong><small>Get a reminder when you finish</small></span>
+              @if (timer.state().settings.notificationsEnabled) {
+                <button type="button" class="notification-toggle enabled" (click)="timer.disableNotifications()">On</button>
+              } @else {
+                <button type="button" class="notification-toggle" (click)="timer.enableNotifications()">Enable</button>
+              }
+            </div>
+            @if (timer.state().status === 'running') {
+              <p class="settings-hint">Pause the timer before changing interval lengths.</p>
+            }
+            <button class="save-settings" type="submit" [disabled]="timer.state().status === 'running'">Save settings</button>
+          </form>
+        </aside>
+      </section>
+
+      <section id="stats" class="study-overview" aria-label="Study statistics">
+        <article class="overview-card">
+          <div class="overview-heading"><span class="overview-icon today-icon">◷</span><span>Today</span></div>
+          <strong>{{ formatStudyTime(timer.todayStudySeconds()) }}</strong>
+          <small>Focused study time</small>
+        </article>
+        <article class="overview-card">
+          <div class="overview-heading"><span class="overview-icon week-icon">▤</span><span>This week</span></div>
+          <strong>{{ formatStudyTime(timer.weekStudySeconds()) }}</strong>
+          <small>{{ timer.weekCompletedIntervals() }} completed focus sessions</small>
+        </article>
+        <article class="overview-card">
+          <div class="overview-heading"><span class="overview-icon month-icon">✦</span><span>This month</span></div>
+          <strong>{{ formatStudyTime(timer.monthStudySeconds()) }}</strong>
+          <small>Keep showing up for yourself</small>
+        </article>
+      </section>
+
+      <section class="subject-breakdown insight-card" aria-label="Study time by subject">
+        <div class="section-heading">
+          <div><span class="detail-kicker">WHERE YOUR TIME GOES</span><h2>Study time by subject</h2></div>
+          <span class="weekly-total">{{ formatStudyTime(subjectStudyTotal()) }} total</span>
+        </div>
+        <p class="subject-description">Completed focus intervals grouped by the subject you recorded.</p>
+        <div class="subject-list">
+          @for (subject of subjectStudySummary(); track subject.name) {
+            <div class="subject-row">
+              <div class="subject-row-heading">
+                <strong>{{ subject.name }}</strong>
+                <span>{{ formatStudyTime(subject.studySeconds) }}</span>
+              </div>
+              <div class="subject-progress" aria-hidden="true">
+                <span [style.width.%]="subject.sharePercent"></span>
+              </div>
+              <small>{{ subject.sessionCount }} {{ subject.sessionCount === 1 ? 'focus session' : 'focus sessions' }} · {{ subject.sharePercent }}% of study time</small>
+            </div>
+          } @empty {
+            <div class="subject-empty">Complete a focus session with a subject set to see your study time here.</div>
+          }
+        </div>
+      </section>
+
+      <section class="bottom-grid">
+        <article class="insight-card">
+          <div class="section-heading">
+            <div><span class="detail-kicker">YOUR CONSISTENCY</span><h2>Study this week</h2></div>
+            <span class="weekly-total">{{ formatStudyTime(timer.weekStudySeconds()) }}</span>
+          </div>
+          <div class="weekly-chart" aria-label="Study time for each day this week">
+            @for (day of timer.weeklyStudyDays(); track day.label) {
+              <div class="chart-day" [attr.aria-label]="day.label + ': ' + formatStudyTime(day.studySeconds)">
+                <div class="chart-track">
+                  @if (day.studySeconds > 0) {
+                    <span class="chart-bar" [class.today-bar]="day.isToday" [class.future-bar]="day.isFuture" [style.height.%]="day.barHeightPercent"></span>
+                  }
+                </div>
+                <small [class.today-label]="day.isToday">{{ day.label }}</small>
+              </div>
+            }
+          </div>
+        </article>
+
+        <article class="insight-card recent-card">
+          <div class="section-heading">
+            <div><span class="detail-kicker">A LITTLE PROGRESS</span><h2>Recent focus sessions</h2></div>
+            <span class="recent-count">{{ recentSessions().length }} / 5</span>
+          </div>
+          <div class="recent-list">
+            @for (session of recentSessions(); track session.completedAt) {
+              <div class="recent-session">
+                <span class="recent-session-icon">✓</span>
+                <span class="recent-session-copy">
+                  <strong>{{ session.task || session.subject || 'Focus session' }}</strong>
+                  <small>{{ session.subject || 'Personal study' }} · {{ formatSessionDate(session.completedAt) }}</small>
+                </span>
+                <span class="session-duration">{{ formatSessionDuration(session.durationSeconds) }}</span>
+              </div>
+            } @empty {
+              <div class="recent-empty">
+                <span class="empty-clock">◷</span>
+                <strong>Your sessions will show up here</strong>
+                <small>Complete a focus interval to start your history.</small>
+              </div>
+            }
+          </div>
+        </article>
+      </section>
+    </div>
+  </main>
+</div>

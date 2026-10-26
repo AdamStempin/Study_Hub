@@ -3,7 +3,7 @@ import { provideRouter } from '@angular/router';
 import { RouterTestingHarness } from '@angular/router/testing';
 import { describe, expect, it } from 'vitest';
 import { TasksPageComponent } from './tasks-page.component';
-import { TaskService } from '../task.service';
+import { TaskService } from '../services/task.service';
 
 describe('TasksPageComponent', () => {
   it('shows task details and saves edits from its detail route', async () => {

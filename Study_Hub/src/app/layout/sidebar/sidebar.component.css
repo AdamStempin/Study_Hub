@@ -1,0 +1,233 @@
+:host {
+  display: contents;
+}
+
+.sidebar {
+  position: sticky;
+  top: 0;
+  display: flex;
+  flex: 0 0 226px;
+  flex-direction: column;
+  height: 100vh;
+  padding: 27px 16px 16px;
+  border-right: 1px solid #263b59;
+  background: linear-gradient(180deg, #0d192b 0%, #0a1423 100%);
+  box-shadow: inset -1px 0 rgb(104 157 229 / 5%), 8px 0 28px rgb(0 0 0 / 12%);
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 0 8px;
+  color: #dce9ff;
+  text-decoration: none;
+}
+
+.brand-mark {
+  width: 32px;
+  height: 32px;
+  flex: 0 0 auto;
+  filter: drop-shadow(0 3px 7px rgb(57 112 240 / 35%));
+}
+
+.brand-name {
+  color: #f2f5fb;
+  font-size: 19px;
+  font-weight: 700;
+  letter-spacing: -0.75px;
+}
+
+.brand-light {
+  background: linear-gradient(100deg, #65a9ff, #7359f4);
+  background-clip: text;
+  color: transparent;
+}
+
+.side-nav {
+  display: grid;
+  gap: 6px;
+  margin-top: 42px;
+}
+
+.nav-link {
+  display: flex;
+  min-height: 44px;
+  align-items: center;
+  gap: 12px;
+  padding: 0 12px;
+  border: 1px solid transparent;
+  border-radius: 9px;
+  color: #b0bfd5;
+  font-size: 13px;
+  font-weight: 550;
+  text-decoration: none;
+  transition: background 160ms ease, color 160ms ease, border-color 160ms ease;
+}
+
+.nav-link:hover,
+.nav-link.active {
+  border-color: rgb(87 153 255 / 35%);
+  background: linear-gradient(100deg, rgb(43 112 226 / 42%), rgb(36 81 153 / 22%));
+  color: #f2f7ff;
+}
+
+.nav-link.active {
+  box-shadow: inset 3px 0 #69a9ff, 0 0 18px rgb(50 117 222 / 10%);
+}
+
+.nav-link svg {
+  width: 17px;
+  height: 17px;
+  flex: 0 0 auto;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.7;
+}
+
+.profile {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: auto;
+  padding: 14px 4px 3px;
+  border-top: 1px solid #263b59;
+  color: #eef4ff;
+  text-decoration: none;
+}
+
+.avatar {
+  display: grid;
+  width: 34px;
+  height: 34px;
+  flex: 0 0 auto;
+  place-items: center;
+  border: 1px solid rgb(129 181 255 / 65%);
+  border-radius: 50%;
+  background: linear-gradient(145deg, #315b94, #192c49);
+  box-shadow: 0 0 0 3px rgb(85 148 236 / 10%);
+  color: #eaf3ff;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.profile-copy {
+  display: grid;
+  min-width: 0;
+  gap: 3px;
+}
+
+.profile-copy strong {
+  overflow: hidden;
+  font-size: 11px;
+  font-weight: 600;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.profile-copy small {
+  color: #9aaac2;
+  font-size: 11px;
+}
+
+.profile-chevron {
+  margin-left: auto;
+  color: #8190a8;
+}
+
+@media (max-width: 1100px) {
+  .sidebar {
+    flex-basis: 190px;
+  }
+}
+
+@media (max-width: 760px) {
+  .sidebar {
+    flex-basis: 64px;
+    align-items: center;
+    padding: 18px 8px 12px;
+  }
+
+  .brand {
+    padding: 0;
+  }
+
+  .brand > span:last-child,
+  .nav-link span,
+  .profile-copy,
+  .profile-chevron {
+    display: none;
+  }
+
+  .side-nav {
+    width: 100%;
+    gap: 8px;
+    margin-top: 32px;
+  }
+
+  .nav-link {
+    justify-content: center;
+    padding: 0;
+  }
+}
+
+@media (max-width: 600px) {
+  .sidebar {
+    position: fixed;
+    z-index: 10;
+    inset: auto 0 0;
+    width: 100%;
+    height: calc(58px + env(safe-area-inset-bottom));
+    flex-direction: row;
+    justify-content: center;
+    padding: 4px 8px calc(4px + env(safe-area-inset-bottom));
+    border-top: 1px solid #1c2b41;
+    border-right: 0;
+    background: #0a1321;
+  }
+
+  .brand,
+  .profile {
+    display: none;
+  }
+
+  .side-nav {
+    display: flex;
+    width: min(100%, 480px);
+    align-items: center;
+    justify-content: space-around;
+    gap: 2px;
+    margin: 0;
+  }
+
+  .nav-link {
+    width: 42px;
+    min-height: 42px;
+    flex: 1 1 42px;
+    justify-content: center;
+    padding: 0;
+  }
+}
+
+@media (min-width: 1200px) and (min-height: 650px) {
+  .sidebar {
+    flex: 0 0 clamp(225px, 15vw, 270px);
+    height: 100%;
+    padding: clamp(27px, 3vh, 38px) 18px 18px;
+  }
+
+  .nav-link {
+    min-height: clamp(42px, 4.3vh, 50px);
+    font-size: clamp(13px, 0.8vw, 16px);
+  }
+
+  .profile-copy strong {
+    font-size: clamp(11px, 0.68vw, 14px);
+  }
+
+  .profile-copy small {
+    font-size: clamp(11px, 0.65vw, 13px);
+  }
+}

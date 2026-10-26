@@ -1,12 +1,5 @@
 import { computed, Injectable, signal } from '@angular/core';
-
-export interface StudyTask {
-  id: number;
-  subject: string;
-  description: string;
-  dueAt: number;
-  completedAt: number | null;
-}
+import type { StudyTask } from '../models/study-task.model';
 
 @Injectable({ providedIn: 'root' })
 export class TaskService {

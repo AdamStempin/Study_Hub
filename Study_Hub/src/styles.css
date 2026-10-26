@@ -1,4 +1,4 @@
-@import './app/features/pomodoro/pomodoro.css';
+@import './app/features/pomodoro/components/pomodoro.css';
 
 * {
   box-sizing: border-box;

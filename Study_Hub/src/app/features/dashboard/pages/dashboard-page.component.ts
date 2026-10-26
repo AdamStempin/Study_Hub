@@ -1,12 +1,15 @@
 import { computed, Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
-import { PomodoroSettings, PomodoroTimerService } from '../../pomodoro/pomodoro-timer.service';
-import { StudyTask, TaskService } from '../../tasks/task.service';
+import type { PomodoroSettings } from '../../pomodoro/models/pomodoro.models';
+import { PomodoroTimerService } from '../../pomodoro/services/pomodoro-timer.service';
+import { SidebarComponent } from '../../../layout/sidebar/sidebar.component';
+import type { StudyTask } from '../../tasks/models/study-task.model';
+import { TaskService } from '../../tasks/services/task.service';
 
 @Component({
   selector: 'app-dashboard-page',
-  imports: [FormsModule, RouterLink],
+  imports: [FormsModule, RouterLink, SidebarComponent],
   templateUrl: './dashboard-page.component.html',
   styleUrl: './dashboard-page.component.css'
 })
@@ -26,6 +29,13 @@ export class DashboardPageComponent {
   readonly timerProgress = computed(() => (
     this.timer.remainingSeconds() / this.timer.state().intervalDurationSeconds
   ) * 100);
+  readonly focusCycleSteps = computed(() => Array.from(
+    { length: this.timer.state().settings.intervalsBeforeLongBreak },
+    (_, index) => index,
+  ));
+  readonly completedCycleIntervals = computed(() => (
+    this.timer.state().completedWorkIntervals % this.focusCycleSteps().length
+  ));
   settingsOpen = false;
   settingsForm: PomodoroSettings = { ...this.timer.state().settings };
   addTaskOpen = false;
