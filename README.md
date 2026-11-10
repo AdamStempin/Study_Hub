@@ -67,6 +67,26 @@ browser memory. They are **not saved between page reloads**; refreshing the
 application clears them. Browser notifications require the browser's
 permission, and completion sound requires browser audio support.
 
+## Architecture
+
+![StudyHub architecture](docs/architecture.png)
+
+*(Slovak version: [docs/architecture.sk.png](docs/architecture.sk.png).)*
+
+Today StudyHub is a client-side Angular application. The three pages
+(Dashboard, Tasks, Timer) read and write state through two root-provided
+services built on Angular Signals:
+
+- `TaskService` – tasks, deadlines, and derived dashboard figures
+  (active subjects, due today, upcoming, completed this week).
+- `PomodoroTimerService` – timer phases, settings, completed sessions, and
+  study statistics, plus browser notifications and completion sounds.
+
+Firebase (Authentication, Firestore, Analytics) is initialised in
+`src/app/core/services/firebase.ts`, but no feature uses it yet. A backend API,
+file storage, and e-mail notifications are planned and drawn with dashed lines
+in the diagram.
+
 ## Technology
 
 - Angular 21 and TypeScript
@@ -74,6 +94,7 @@ permission, and completion sound requires browser audio support.
 - Angular Signals for timer, task, and derived study data
 - HTML and responsive CSS
 - Vitest for unit tests
+- Firebase SDK 13 (configured, not yet connected to features)
 
 ## Run locally
 
@@ -127,15 +148,33 @@ Study_Hub/
 │   │   │       ├── models/
 │   │   │       ├── pages/
 │   │   │       └── services/
+│   │   ├── core/
+│   │   │   └── services/firebase.ts # Firebase initialisation
 │   │   └── pages/not-found/
 │   └── styles.css
 ├── angular.json
 └── package.json
 ```
 
+## Feature status
+
+| Area | Status |
+| --- | --- |
+| Task management (create, edit, complete, delete) | Implemented |
+| Pomodoro timer and focus statistics | Implemented |
+| Dashboard summary and weekly study chart | Implemented |
+| Browser notifications and completion sound (timer) | Implemented |
+| Registration, sign-in, and user profile | Planned (Firebase Authentication is configured) |
+| Durable storage of tasks and sessions | Planned (Cloud Firestore is configured) |
+| Subjects and Calendar pages | Planned (navigation placeholders) |
+| Notes and study-material uploads | Planned |
+| E-mail deadline reminders | Planned |
+| Administrator user management | Planned |
+
 ## Current scope
 
-StudyHub is under active development. The current implemented flows are the
-dashboard, task management, and Pomodoro study tracking described above.
-Authentication, durable data storage, and standalone Subjects and Calendar
-pages are not currently implemented.
+StudyHub is under active development. The implemented flows are the dashboard,
+task management, and Pomodoro study tracking described above. Tasks and timer
+data live in browser memory only, and no sign-in is required yet. When
+connecting Firebase to features, set Firestore security rules before storing
+real user data.
