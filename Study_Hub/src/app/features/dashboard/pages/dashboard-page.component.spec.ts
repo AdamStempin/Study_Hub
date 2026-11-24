@@ -1,12 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
 import { DashboardPageComponent } from './dashboard-page.component';
+import { provideTaskServiceTestDoubles } from '../../tasks/services/task-service-test-utils';
 
 describe('DashboardPageComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [DashboardPageComponent],
-      providers: [provideRouter([])],
+      providers: [provideRouter([]), ...provideTaskServiceTestDoubles()],
     }).compileComponents();
   });
 
@@ -15,7 +16,7 @@ describe('DashboardPageComponent', () => {
     fixture.detectChanges();
     await fixture.whenStable();
     const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('h1')?.textContent).toContain('Hi, Adam!');
+    expect(compiled.querySelector('h1')?.textContent).toContain('Hi, Adam Stempin!');
   });
 
   it('should render the configurable Timer and its controls', async () => {
@@ -76,9 +77,8 @@ describe('DashboardPageComponent', () => {
       description: 'Review cell structure',
       dueDateTime: localDueDate,
     };
-    compiled.querySelector<HTMLButtonElement>('.task-form button[type="submit"]')?.click();
+    await fixture.componentInstance.addStudyTask();
     fixture.detectChanges();
-    await fixture.whenStable();
 
     expect(compiled.querySelector('[role="dialog"]')).toBeNull();
     expect(compiled.querySelector('.deadline-copy strong')?.textContent).toContain('Biology');
@@ -88,6 +88,7 @@ describe('DashboardPageComponent', () => {
 
     compiled.querySelector<HTMLButtonElement>('.task-complete-button')?.click();
     fixture.detectChanges();
+    await fixture.whenStable();
     expect(Array.from(compiled.querySelectorAll('.stat-card strong')).map((item) => item.textContent?.trim()))
       .toEqual(['0', '0', '0', '1']);
   });

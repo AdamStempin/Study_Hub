@@ -2,6 +2,8 @@ import { TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
 import { afterEach, vi } from 'vitest';
 import { PomodoroPageComponent } from './pomodoro-page.component';
+import { signal } from '@angular/core';
+import { FirebaseAuthService } from '../../../core/services/firebase-auth.service';
 
 describe('PomodoroPageComponent', () => {
   afterEach(() => {
@@ -11,7 +13,16 @@ describe('PomodoroPageComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [PomodoroPageComponent],
-      providers: [provideRouter([])],
+      providers: [
+        provideRouter([]),
+        {
+          provide: FirebaseAuthService,
+          useValue: {
+            user: signal({ uid: 'test-user', displayName: 'Adam Stempin', email: 'adam@example.com' }),
+            signOut: async () => {},
+          },
+        },
+      ],
     }).compileComponents();
   });
 

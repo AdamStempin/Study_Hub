@@ -6,6 +6,7 @@ import { PomodoroTimerService } from '../../pomodoro/services/pomodoro-timer.ser
 import { SidebarComponent } from '../../../layout/sidebar/sidebar.component';
 import type { StudyTask } from '../../tasks/models/study-task.model';
 import { TaskService } from '../../tasks/services/task.service';
+import { FirebaseAuthService } from '../../../core/services/firebase-auth.service';
 
 @Component({
   selector: 'app-dashboard-page',
@@ -16,6 +17,15 @@ import { TaskService } from '../../tasks/services/task.service';
 export class DashboardPageComponent {
   readonly timer = inject(PomodoroTimerService);
   readonly tasks = inject(TaskService);
+  private readonly auth = inject(FirebaseAuthService);
+  readonly greetingName = computed(() => {
+    const user = this.auth.user();
+    return user?.displayName || user?.email?.split('@')[0] || 'there';
+  });
+  readonly userInitials = computed(() => {
+    const parts = this.greetingName().split(/[\s._-]+/).filter(Boolean);
+    return parts.slice(0, 2).map((part) => part[0].toUpperCase()).join('') || 'U';
+  });
   readonly todayLabel = new Date().toLocaleDateString('en-US', {
     weekday: 'long',
     month: 'long',
@@ -88,9 +98,14 @@ export class DashboardPageComponent {
     }
   }
 
-  addStudyTask(): void {
-    if (!this.tasks.addTask(this.newTask.subject, this.newTask.description, this.newTask.dueDateTime)) {
-      this.taskFormError = 'Please enter a subject, description, and valid deadline.';
+  async addStudyTask(): Promise<void> {
+    if (!await this.tasks.addTask(
+      this.newTask.subject,
+      this.newTask.description,
+      this.newTask.dueDateTime,
+    )) {
+      this.taskFormError = this.tasks.error()
+        || 'Please enter a subject, description, and valid deadline.';
       return;
     }
 

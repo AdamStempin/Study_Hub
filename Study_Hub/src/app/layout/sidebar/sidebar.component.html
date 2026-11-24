@@ -46,9 +46,15 @@
     </a>
   </nav>
 
-  <a class="profile" routerLink="/">
-    <span class="avatar">AS</span>
-    <span class="profile-copy"><strong>Adam Stempin</strong><small>adam&#64;example.com</small></span>
-    <span class="profile-chevron">⌄</span>
-  </a>
+  @if (errorMessage()) {
+    <p class="profile-error" role="alert">{{ errorMessage() }}</p>
+  }
+  <button class="profile" type="button" (click)="signOut()" aria-label="Sign out">
+    <span class="avatar">{{ userInitials }}</span>
+    <span class="profile-copy">
+      <strong>{{ auth.user()?.displayName || auth.user()?.email || 'Signed in' }}</strong>
+      <small>{{ auth.user()?.email }}</small>
+    </span>
+    <span class="profile-chevron" aria-hidden="true">↪</span>
+  </button>
 </aside>

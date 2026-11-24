@@ -1,5 +1,5 @@
 export interface StudyTask {
-  id: number;
+  id: string;
   subject: string;
   description: string;
   dueAt: number;

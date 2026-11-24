@@ -1,0 +1,202 @@
+:host {
+  display: block;
+  min-height: 100vh;
+  color: #eef4ff;
+  font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+.auth-page {
+  display: grid;
+  min-height: 100vh;
+  place-items: center;
+  padding: 24px;
+  background:
+    radial-gradient(ellipse at 50% 0%, rgb(38 91 164 / 22%), transparent 48%),
+    #070d18;
+}
+
+.auth-card {
+  width: min(100%, 430px);
+  padding: 38px;
+  border: 1px solid #20314a;
+  border-radius: 16px;
+  background: linear-gradient(145deg, #101d30, #0b1422);
+  box-shadow: 0 24px 80px rgb(0 0 0 / 30%);
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 42px;
+  color: #f2f5fb;
+  font-size: 19px;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.brand-mark {
+  display: grid;
+  width: 34px;
+  height: 34px;
+  place-items: center;
+  border-radius: 11px;
+  background: linear-gradient(145deg, #72b5ff, #4569f5);
+  color: white;
+}
+
+.brand-light {
+  color: #72aaff;
+}
+
+.eyebrow {
+  margin: 0 0 9px;
+  color: #7db3ff;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.4px;
+}
+
+h1 {
+  margin: 0;
+  font-size: 29px;
+  letter-spacing: -0.8px;
+}
+
+.intro,
+.mode-switch {
+  color: #9aaac2;
+  font-size: 13px;
+}
+
+.intro {
+  margin: 10px 0 26px;
+}
+
+.google-button {
+  display: flex;
+  width: 100%;
+  min-height: 44px;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  border: 1px solid #34445c;
+  border-radius: 8px;
+  background: #f7f9fc;
+  color: #1d2735;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 650;
+  cursor: pointer;
+}
+
+.google-button:hover:not(:disabled) {
+  background: #e9eef6;
+}
+
+.google-button:disabled {
+  cursor: wait;
+  opacity: 0.7;
+}
+
+.google-button svg {
+  width: 18px;
+  height: 18px;
+}
+
+.separator {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 19px 0;
+  color: #8190a8;
+  font-size: 11px;
+  white-space: nowrap;
+}
+
+.separator::before,
+.separator::after {
+  height: 1px;
+  flex: 1;
+  background: #28384f;
+  content: "";
+}
+
+form {
+  display: grid;
+  gap: 16px;
+}
+
+label {
+  display: grid;
+  gap: 7px;
+  color: #c5d2e5;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+input {
+  width: 100%;
+  min-height: 44px;
+  padding: 0 12px;
+  border: 1px solid #283b56;
+  border-radius: 8px;
+  outline: none;
+  background: #0b1524;
+  color: #eef4ff;
+  font: inherit;
+}
+
+input:focus {
+  border-color: #5897f5;
+  box-shadow: 0 0 0 3px rgb(88 151 245 / 16%);
+}
+
+form > button {
+  min-height: 44px;
+  margin-top: 5px;
+  border: 0;
+  border-radius: 8px;
+  background: #3473dc;
+  color: white;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 650;
+  cursor: pointer;
+}
+
+form > button:disabled {
+  cursor: wait;
+  opacity: 0.7;
+}
+
+.error-message {
+  margin: 0;
+  color: #ff9a9a;
+  font-size: 12px;
+}
+
+.mode-switch {
+  margin: 22px 0 0;
+  text-align: center;
+}
+
+.mode-switch button {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: #81b4ff;
+  font: inherit;
+  font-weight: 650;
+  cursor: pointer;
+}
+
+@media (max-width: 480px) {
+  .auth-card {
+    padding: 28px 22px;
+  }
+}

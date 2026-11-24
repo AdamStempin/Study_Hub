@@ -62,10 +62,28 @@ navigation placeholders rather than separate implemented pages.
 
 ## Data and privacy
 
-Tasks, timer settings, and completed focus sessions are currently held in
-browser memory. They are **not saved between page reloads**; refreshing the
-application clears them. Browser notifications require the browser's
-permission, and completion sound requires browser audio support.
+Study tasks are stored in Cloud Firestore under the signed-in user's account.
+Firebase Authentication supports email/password and Google sign-in, and
+Firestore rules restrict each account to its own tasks. Pomodoro settings and
+completed focus sessions remain in browser memory and reset on a full page
+reload. Browser notifications require the browser's permission, and completion
+sound requires browser audio support.
+
+### Firebase setup
+
+The Firebase Web SDK and project configuration are already included. Before
+using cloud tasks, enable **Authentication → Sign-in method → Email/Password**
+and **Google** in Firebase Console, and create a Cloud Firestore database.
+Then, from the `Study_Hub` directory, sign in with Firebase CLI and deploy the
+checked-in Firestore rules:
+
+```bash
+npx firebase-tools login
+npx firebase-tools deploy --only firestore:rules --project study-hub-2027
+```
+
+The rules restrict access to each authenticated user's own task collection.
+Do not use Firestore test-mode rules in production.
 
 ## Technology
 
@@ -135,7 +153,7 @@ Study_Hub/
 
 ## Current scope
 
-StudyHub is under active development. The current implemented flows are the
-dashboard, task management, and Pomodoro study tracking described above.
-Authentication, durable data storage, and standalone Subjects and Calendar
-pages are not currently implemented.
+StudyHub is under active development. The dashboard, task management,
+email/password authentication, Firestore task sync, and Pomodoro study tracking
+are implemented. Timer settings and completed focus sessions are not yet
+persisted between reloads. Subjects and Calendar remain navigation placeholders.

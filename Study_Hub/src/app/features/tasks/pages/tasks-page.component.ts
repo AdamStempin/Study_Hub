@@ -3,10 +3,11 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { TaskService } from '../services/task.service';
+import { SidebarComponent } from '../../../layout/sidebar/sidebar.component';
 
 @Component({
   selector: 'app-tasks-page',
-  imports: [FormsModule, RouterLink],
+  imports: [FormsModule, RouterLink, SidebarComponent],
   templateUrl: './tasks-page.component.html',
   styleUrl: './tasks-page.component.css',
 })
@@ -15,7 +16,7 @@ export class TasksPageComponent {
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly destroyRef = inject(DestroyRef);
-  private readonly selectedTaskId = signal<number | null>(null);
+  private readonly selectedTaskId = signal<string | null>(null);
   readonly selectedTask = computed(() => {
     const id = this.selectedTaskId();
     return id === null ? undefined : this.tasks.tasks().find((task) => task.id === id);
@@ -30,8 +31,7 @@ export class TasksPageComponent {
   constructor() {
     this.route.paramMap.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((params) => {
       const rawId = params.get('id');
-      const id = rawId === null ? null : Number(rawId);
-      this.selectedTaskId.set(id !== null && Number.isInteger(id) ? id : null);
+      this.selectedTaskId.set(rawId);
       const task = this.selectedTask();
       this.formError = '';
       this.savedNotice = '';
@@ -57,15 +57,19 @@ export class TasksPageComponent {
     });
   }
 
-  saveTask(): void {
+  async saveTask(): Promise<void> {
     const task = this.selectedTask();
-    if (!task || !this.tasks.updateTask(
+    if (!task) {
+      return;
+    }
+    if (!await this.tasks.updateTask(
       task.id,
       this.taskForm.subject,
       this.taskForm.description,
       this.taskForm.dueDateTime,
     )) {
-      this.formError = 'Please enter a subject, description, and valid deadline.';
+      this.formError = this.tasks.error()
+        || 'Please enter a subject, description, and valid deadline.';
       return;
     }
 
@@ -73,18 +77,19 @@ export class TasksPageComponent {
     this.savedNotice = 'Task updated.';
   }
 
-  toggleComplete(): void {
+  async toggleComplete(): Promise<void> {
     const task = this.selectedTask();
-    if (task) {
-      this.tasks.toggleComplete(task.id);
+    if (task && !await this.tasks.toggleComplete(task.id)) {
+      this.formError = this.tasks.error() || 'Could not update this task.';
     }
   }
 
-  deleteTask(): void {
+  async deleteTask(): Promise<void> {
     const task = this.selectedTask();
-    if (task) {
-      this.tasks.deleteTask(task.id);
-      void this.router.navigate(['/tasks']);
+    if (task && await this.tasks.deleteTask(task.id)) {
+      await this.router.navigate(['/tasks']);
+    } else if (task) {
+      this.formError = this.tasks.error() || 'Could not delete this task.';
     }
   }
 

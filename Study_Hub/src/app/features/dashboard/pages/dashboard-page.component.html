@@ -14,7 +14,7 @@
           <i class="notification-dot"></i>
         </button>
         <button class="icon-button moon" type="button" aria-label="Dark mode">☾</button>
-        <button class="avatar top-avatar" type="button" aria-label="Adam Stempin's profile">AS</button>
+        <button class="avatar top-avatar" type="button" aria-label="Signed-in user's profile">{{ userInitials() }}</button>
       </div>
     </header>
 
@@ -28,7 +28,7 @@
             </svg>
             {{ todayLabel }}
           </p>
-          <h1>Hi, Adam! <span aria-hidden="true">👋</span></h1>
+          <h1>Hi, {{ greetingName() }}! <span aria-hidden="true">👋</span></h1>
           <p class="welcome-subtitle">Every small step brings you closer to your goal.</p>
         </div>
         <button class="primary-button" type="button" (click)="openAddTask()"><span>＋</span> Add task</button>
@@ -64,6 +64,12 @@
             <a class="text-link" routerLink="/tasks">View all <span>→</span></a>
           </div>
           <div class="deadline-list">
+            @if (tasks.error()) {
+              <p class="deadline-empty" role="alert">{{ tasks.error() }}</p>
+            }
+            @if (tasks.isLoading()) {
+              <p class="deadline-empty" role="status">Loading your tasks…</p>
+            }
             @for (task of tasks.upcomingTasks(); track task.id) {
               <div class="deadline-row" [class.task-completed]="task.completedAt !== null">
                 <a class="deadline-task-link" [routerLink]="['/tasks', task.id]">

@@ -60,12 +60,34 @@ src/app/
 └── shared/components/
 ```
 
-## Current data behavior
+## Data and privacy
 
-The task and Pomodoro services use Angular Signals to hold in-memory state.
-Tasks, settings, and completed sessions currently reset on a full page reload.
-Completed focus intervals are used to calculate daily, weekly, and monthly
-study totals, recent sessions, and study time grouped by subject.
+Study tasks are stored in Cloud Firestore under the signed-in user's account.
+Firebase Authentication supports email/password and Google sign-in, and
+Firestore rules restrict each account to its own tasks. Pomodoro settings and
+completed focus sessions remain in browser memory and reset on a full page
+reload.
+
+### Firebase setup
+
+The Firebase Web SDK and project configuration are already included. Before
+using cloud tasks:
+
+1. In Firebase Console, enable **Authentication → Sign-in method → Email/Password**
+   and **Google**.
+2. Create a **Cloud Firestore** database for the configured Firebase project.
+3. From this directory, sign in with Firebase CLI and deploy the checked-in
+   Firestore rules:
+
+   ```bash
+   npx firebase-tools login
+   npx firebase-tools deploy --only firestore:rules --project study-hub-2027
+   ```
+
+The rules in `firestore.rules` restrict reads and writes to the authenticated
+account's own `users/{uid}/tasks` collection. Do not deploy Firestore with
+permissive test-mode rules. Add any production app domain to Firebase
+Authentication's authorized domains before deploying the app.
 
 ## Notes
 

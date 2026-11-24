@@ -1,25 +1,37 @@
 import { Routes } from '@angular/router';
-import { DashboardPageComponent } from './features/dashboard/pages/dashboard-page.component';
-import { PomodoroPageComponent } from './features/pomodoro/pages/pomodoro-page.component';
-import { TasksPageComponent } from './features/tasks/pages/tasks-page.component';
+import { authGuard, signedOutGuard } from './core/guards/auth.guard';
 import { NotFoundComponent } from './pages/not-found/not-found.component';
 
 export const routes: Routes = [
   {
+    path: 'login',
+    loadComponent: () => import('./features/auth/pages/login-page.component')
+      .then((module) => module.LoginPageComponent),
+    canActivate: [signedOutGuard],
+  },
+  {
     path: '',
-    component: DashboardPageComponent,
+    loadComponent: () => import('./features/dashboard/pages/dashboard-page.component')
+      .then((module) => module.DashboardPageComponent),
+    canActivate: [authGuard],
   },
   {
     path: 'tasks',
-    component: TasksPageComponent,
+    loadComponent: () => import('./features/tasks/pages/tasks-page.component')
+      .then((module) => module.TasksPageComponent),
+    canActivate: [authGuard],
   },
   {
     path: 'tasks/:id',
-    component: TasksPageComponent,
+    loadComponent: () => import('./features/tasks/pages/tasks-page.component')
+      .then((module) => module.TasksPageComponent),
+    canActivate: [authGuard],
   },
   {
     path: 'timer',
-    component: PomodoroPageComponent,
+    loadComponent: () => import('./features/pomodoro/pages/pomodoro-page.component')
+      .then((module) => module.PomodoroPageComponent),
+    canActivate: [authGuard],
   },
   {
     path: '**',
