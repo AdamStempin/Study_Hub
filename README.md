@@ -85,6 +85,26 @@ npx firebase-tools deploy --only firestore:rules --project study-hub-2027
 The rules restrict access to each authenticated user's own task collection.
 Do not use Firestore test-mode rules in production.
 
+## Architecture
+
+![StudyHub architecture](docs/architecture.png)
+
+*(Slovak version: [docs/architecture.sk.png](docs/architecture.sk.png).)*
+
+Today StudyHub is a client-side Angular application. The three pages
+(Dashboard, Tasks, Timer) read and write state through two root-provided
+services built on Angular Signals:
+
+- `TaskService` – tasks, deadlines, and derived dashboard figures
+  (active subjects, due today, upcoming, completed this week).
+- `PomodoroTimerService` – timer phases, settings, completed sessions, and
+  study statistics, plus browser notifications and completion sounds.
+
+Firebase (Authentication, Firestore, Analytics) is initialised in
+`src/app/core/services/firebase.ts`, but no feature uses it yet. A backend API,
+file storage, and e-mail notifications are planned and drawn with dashed lines
+in the diagram.
+
 ## Technology
 
 - Angular 21 and TypeScript
@@ -92,6 +112,7 @@ Do not use Firestore test-mode rules in production.
 - Angular Signals for timer, task, and derived study data
 - HTML and responsive CSS
 - Vitest for unit tests
+- Firebase SDK 13 (configured, not yet connected to features)
 
 ## Run locally
 
@@ -145,15 +166,40 @@ Study_Hub/
 │   │   │       ├── models/
 │   │   │       ├── pages/
 │   │   │       └── services/
+│   │   ├── core/
+│   │   │   └── services/firebase.ts # Firebase initialisation
 │   │   └── pages/not-found/
 │   └── styles.css
 ├── angular.json
 └── package.json
 ```
 
+## Feature status
+
+| Area | Status |
+| --- | --- |
+| Task management (create, edit, complete, delete) | Implemented |
+| Pomodoro timer and focus statistics | Implemented |
+| Dashboard summary and weekly study chart | Implemented |
+| Browser notifications and completion sound (timer) | Implemented |
+| Registration, sign-in, and user profile | Planned (Firebase Authentication is configured) |
+| Durable storage of tasks and sessions | Planned (Cloud Firestore is configured) |
+| Subjects and Calendar pages | Planned (navigation placeholders) |
+| Notes and study-material uploads | Planned |
+| E-mail deadline reminders | Planned |
+| Administrator user management | Planned |
+
 ## Current scope
 
+<<<<<<< HEAD
 StudyHub is under active development. The dashboard, task management,
 email/password authentication, Firestore task sync, and Pomodoro study tracking
 are implemented. Timer settings and completed focus sessions are not yet
 persisted between reloads. Subjects and Calendar remain navigation placeholders.
+=======
+StudyHub is under active development. The implemented flows are the dashboard,
+task management, and Pomodoro study tracking described above. Tasks and timer
+data live in browser memory only, and no sign-in is required yet. When
+connecting Firebase to features, set Firestore security rules before storing
+real user data.
+>>>>>>> 2980b5ae6c85ac9bfeddd0f3255e6a2ca5bee920
