@@ -1,0 +1,3 @@
+[submodule "study_hub-backend"]
+	path = study_hub-backend
+	url = https://github.com/AdamStempin/study_hub-backend.git
